@@ -1,0 +1,138 @@
+import React from 'react';
+import { AsyncStorage } from 'react-native';
+import { Icon, Notifications, Permissions } from 'expo';
+import IconLibs from '../constants/IconLibs';
+import { FLASH_CARDS_KEY } from './api';
+
+const NOTIFICATION_KEY = 'FlashCards:notifications';
+const hour = 9;
+
+export function getIcon({
+  iconLib,
+  name,
+  size,
+  color,
+}) {
+  switch (iconLib) {
+    case IconLibs.materialCommunityIcons:
+      return (
+        <Icon.MaterialCommunityIcons
+          name={name}
+          size={size}
+          color={color}
+        />
+      );
+    case IconLibs.fontAwesome:
+      return (
+        <Icon.FontAwesome
+          name={name}
+          size={size}
+          color={color}
+        />
+      );
+    case IconLibs.entypo:
+      return (
+        <Icon.entypo
+          name={name}
+          size={size}
+          color={color}
+        />
+      );
+    default:
+      return (
+        <Icon.Ionicons
+          name={name}
+          size={size}
+          color={color}
+        />
+      );
+  }
+}
+
+export function getQuizStats(cards) {
+  const reducer = (total, card) => (card.mark === 'correct' ? total + 1 : total);
+  const correctTotal = cards.reduce(reducer, 0);
+  return {
+    complete: timeToString(),
+    correct: correctTotal,
+    score: Math.round(correctTotal / cards.length * 100),
+  };
+}
+
+/* from Tyler McGinnis */
+export function timeToString(time = Date.now()) {
+  const date = new Date(time);
+  const todayUTC = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(),
+    date.getHours(), date.getMinutes(), date.getSeconds()));
+  return todayUTC.toISOString().split('.000Z')[0];
+}
+
+
+/* from Tyler McGinnis */
+export function clearLocalNotifcation() {
+  return AsyncStorage.removeItem(NOTIFICATION_KEY)
+    .then(Notifications.cancelAllScheduledNotificationsAsync);
+}
+
+/* from Typer McGinnis */
+function createNotification() {
+  return {
+    title: 'Take A Quiz!',
+    body: "Don't forget to take a quiz today!",
+    ios: {
+      sound: true
+    },
+    android: {
+      sound: true,
+      priority: 'high',
+      stick: false,
+      vibrate: true,
+    }
+  };
+}
+
+function scheduleLocalNotification() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(hour);
+  tomorrow.setMinutes(0);
+  Notifications.cancelAllScheduledNotificationsAsync();
+  Notifications.scheduleLocalNotificationAsync(
+    createNotification(),
+    {
+      time: tomorrow,
+      repeat: 'day',
+    }
+  );
+}
+
+// called when a deck is deleted - cancels notifications if all decks
+// are deleted
+export function checkNotification() {
+  AsyncStorage.getItem(FLASH_CARDS_KEY)
+    .then((decks) => {
+      if (Object.keys(decks).length === 0) {
+        Notifications.cancelAllScheduledNotificationsAsync();
+      }
+    });
+}
+
+/* from Tyler McGinnis */
+// called whenever a quiz is taken or whenever a deck is added
+export function setLocalNotification() {
+  AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then(JSON.parse)
+    .then((data) => {
+      if (data) {
+        scheduleLocalNotification();
+        return;
+      }
+      Permissions.askAsync(Permissions.NOTIFICATIONS)
+        .then((({ status }) => {
+          if (status === 'granted') {
+            scheduleLocalNotification();
+            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+          }
+        }));
+    });
+}
