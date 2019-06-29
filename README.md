@@ -11,7 +11,8 @@
 
 ## Intro
 
-Flash Cards is an app for creating decks of flash cards.
+Flash Cards is an app for creating decks of flash cards.  It runs on the
+ios Simulator.
 
 ## Downloading
 
