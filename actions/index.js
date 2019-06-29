@@ -60,7 +60,6 @@ export function handleMarkCard(deckId, cardIndex, mark) {
 
 export function handleStartQuiz(deckId, quizId) {
   return (dispatch) => {
-    setLocalNotification();
     submitQuizStart(deckId, quizId)
       .then(() => dispatch(startQuiz(deckId, quizId)))
       .catch(error => console.warn('An error occured starting the quiz.  Try again.', error));
@@ -68,9 +67,12 @@ export function handleStartQuiz(deckId, quizId) {
 }
 
 export function handleCompleteQuiz(deckId, quizId, stats) {
-  return dispatch => submitQuizComplete(deckId, quizId, stats)
-    .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
-    .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
+  return (dispatch) => {
+    setLocalNotification();
+    submitQuizComplete(deckId, quizId, stats)
+      .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
+      .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
+  };
 }
 
 export function handleDeleteCard(deckId, cardIndex) {
