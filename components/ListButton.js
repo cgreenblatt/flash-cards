@@ -17,7 +17,7 @@ export default class ListButton extends Component {
   render() {
     const { childComponent, iconToRender, borderTop } = this.props;
     return (
-      <TouchableOpacity
+      <View
         style={[styles.container, borderTop
           ? styles.borderTop
           : {}
@@ -28,10 +28,10 @@ export default class ListButton extends Component {
           <DeckIcon />
           {childComponent}
         </View>
-        <View style={styles.iconContainer}>
+        <TouchableOpacity style={styles.iconContainer} onPress={this.handlePress}>
           {iconToRender}
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   }
 }

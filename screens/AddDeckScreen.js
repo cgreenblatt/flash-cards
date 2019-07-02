@@ -56,12 +56,12 @@ class AddDeckScreen extends Component {
               placeholder="Enter Deck Title Here"
               maxLength={25}
               value={title}
-              autoFocus
               onChangeText={
                 deckTitle => this.setState({
                   title: deckTitle
                 })
               }
+              autoFocus
             />
           </KeyboardAvoidingView>
           <SubmitBtn onPress={this.submit} />
