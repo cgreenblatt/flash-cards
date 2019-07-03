@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     borderColor: Colors.colorScheme1.darkPrimary,
     borderWidth: 4,
     backgroundColor: Colors.colorScheme1.lightPrimary,
@@ -55,9 +56,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   iconContainer: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 10,
   },
   borderTop: {
     borderTopColor: Colors.colorScheme1.darkPrimary,
