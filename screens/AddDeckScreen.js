@@ -39,16 +39,15 @@ class AddDeckScreen extends Component {
       quizzes: {}
     };
     this.setState({ title: '' });
-    navigation.dismiss();
-    navigation.push('Deck', { deckId: deck.id });
     addDeck(deck);
+    navigation.navigate('Deck', { deckId: deck.id });
   }
 
   render() {
     const { title } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <DeckHeading title="Flash Cards" />
+        <DeckHeading title="Flash Cards" colorScheme={Colors.colorScheme1} />
         <View style={styles.containerInner}>
           <KeyboardAvoidingView>
             <TextInput
@@ -64,7 +63,7 @@ class AddDeckScreen extends Component {
               autoFocus
             />
           </KeyboardAvoidingView>
-          <SubmitBtn onPress={this.submit} />
+          <SubmitBtn onPress={this.submit} colorScheme={Colors.colorScheme1} />
         </View>
       </View>
     );
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return {
-    addDeck: (deck) => { dispatch(handleAddDeck(deck)); }
+    addDeck: deck => dispatch(handleAddDeck(deck)),
   };
 }
 

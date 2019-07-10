@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import Colors from '../constants/Colors';
 import DeckIcon from './DeckIcon';
 
 export default class ListButton extends Component {
@@ -15,17 +14,22 @@ export default class ListButton extends Component {
   }
 
   render() {
-    const { childComponent, iconToRender, borderTop } = this.props;
+    const {
+      childComponent,
+      colorScheme,
+      iconToRender,
+    } = this.props;
+    const colors = {
+      borderColor: colorScheme.darkPrimary,
+      backgroundColor: colorScheme.lightPrimary
+    };
     return (
       <View
-        style={[styles.container, borderTop
-          ? styles.borderTop
-          : {}
-        ]}
+        style={[styles.container, colors]}
         onPress={this.handlePress}
       >
         <View style={styles.innerContainer}>
-          <DeckIcon />
+          <DeckIcon colorScheme={colorScheme} />
           {childComponent}
         </View>
         <TouchableOpacity style={styles.iconContainer} onPress={this.handlePress}>
@@ -41,9 +45,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: Colors.colorScheme1.darkPrimary,
     borderWidth: 4,
-    backgroundColor: Colors.colorScheme1.lightPrimary,
     borderRadius: 10,
     marginTop: 10,
   },
@@ -60,8 +62,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
   },
-  borderTop: {
-    borderTopColor: Colors.colorScheme1.darkPrimary,
-    borderTopWidth: 4,
-  }
 });

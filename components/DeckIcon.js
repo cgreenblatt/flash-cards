@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import IconLibs from '../constants/IconLibs';
 import { getIcon } from '../utils/helpers';
@@ -10,7 +9,6 @@ const { fontSizes } = Layout;
 
 const questionIcon = {
   iconLib: IconLibs.fontAwesome,
-  color: Colors.colorScheme1.lightAccent,
   name: 'question',
   size: fontSizes.large,
 };
@@ -18,18 +16,22 @@ const questionIcon = {
 const answerIcon = {
   iconLib: IconLibs.materialCommunityIcons,
   name: 'lightbulb-on-outline',
-  color: Colors.colorScheme1.darkAccent,
   size: fontSizes.large,
 };
 
-export default function DeckIcon() {
+export default function DeckIcon(props) {
+  const { colorScheme } = props;
   return (
     <View style={styles.deck}>
-      <View style={[styles.deckUpper, styles.deckCommon]}>
-        {getIcon(questionIcon)}
+      <View
+        style={[styles.deckUpper, styles.deckCommon, { backgroundColor: colorScheme.darkPrimary }]}
+      >
+        {getIcon({ ...questionIcon, color: colorScheme.lightAccent })}
       </View>
-      <View style={[styles.deckLower, styles.deckCommon]}>
-        {getIcon(answerIcon)}
+      <View
+        style={[styles.deckLower, styles.deckCommon, { backgroundColor: colorScheme.lightPrimary }]}
+      >
+        {getIcon({ ...answerIcon, color: colorScheme.darkAccent })}
       </View>
     </View>
   );
@@ -49,12 +51,10 @@ const styles = StyleSheet.create({
     width: 80,
   },
   deckUpper: {
-    backgroundColor: Colors.colorScheme1.darkPrimary,
     borderTopLeftRadius: borderRadius,
     borderTopRightRadius: borderRadius,
   },
   deckLower: {
-    backgroundColor: Colors.colorScheme1.lightPrimary,
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
   },

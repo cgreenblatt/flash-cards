@@ -41,13 +41,15 @@ class AddCardScreen extends Component {
   render() {
     const { deck } = this.props;
     const { answer, question } = this.state;
+    const { title, colorScheme } = deck;
+    const borderColor = { borderColor: deck.colorScheme.lightPrimary };
 
     return (
       <View style={styles.container}>
-        <DeckHeading title={deck.title} />
+        <DeckHeading title={title} colorScheme={colorScheme} />
         <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, borderColor]}
             placeholder="Enter the question"
             multiline
             onChangeText={(text) => { this.setState({ question: text }); }}
@@ -55,14 +57,14 @@ class AddCardScreen extends Component {
             autoFocus
           />
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, borderColor]}
             placeholder="Enter the answer"
             multiline
             onChangeText={(text) => { this.setState({ answer: text }); }}
             value={answer}
           />
         </KeyboardAvoidingView>
-        <SubmitBtn onPress={this.handleSubmit} />
+        <SubmitBtn onPress={this.handleSubmit} colorScheme={colorScheme} />
       </View>
     );
   }
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
     height,
     padding: 10,
     borderWidth: 3,
-    borderColor: Colors.colorScheme1.lightPrimary,
   },
   buttons: {
     padding: 10,

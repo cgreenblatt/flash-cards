@@ -1,15 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
 const { fontSizes } = Layout;
 
 export default function SubmitBtn(props) {
-  const { onPress } = props;
+  const { onPress, colorScheme } = props;
+  const buttonColor = { backgroundColor: colorScheme.darkPrimary };
+  const textColor = { color: colorScheme.lightPrimary };
   return (
-    <TouchableOpacity style={styles.submitButton} onPress={onPress}>
-      <Text style={styles.buttonText}> SUBMIT  </Text>
+    <TouchableOpacity style={[styles.submitButton, buttonColor]} onPress={onPress}>
+      <Text style={[styles.buttonText, textColor]}> SUBMIT  </Text>
     </TouchableOpacity>
   );
 }
@@ -19,7 +20,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     padding: 10,
     fontSize: fontSizes.medium,
-    backgroundColor: Colors.colorScheme1.darkPrimary,
     margin: 10,
     borderRadius: 10,
   },
@@ -28,6 +28,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: fontSizes.small,
     padding: 5,
-    color: Colors.colorScheme1.lightPrimary,
   }
 });

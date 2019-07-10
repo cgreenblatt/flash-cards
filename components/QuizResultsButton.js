@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Animated,
   StyleSheet,
@@ -15,7 +16,7 @@ const animationDuration = 500;
 const height = 250;
 const { fontSizes } = Layout;
 
-export default class QuizResultsButton extends Component {
+class QuizResultsButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,7 +69,9 @@ export default class QuizResultsButton extends Component {
   }
 
   render() {
-    const { quiz } = this.props;
+    const { quiz, colorScheme } = this.props;
+    const backgroundColorDark = { backgroundColor: colorScheme.darkPrimary };
+    const backgroundColorLight = { backgroundColor: colorScheme.lightPrimary };
     const { name } = this.state;
     const startTime = quiz.start.split('T')[1];
     const startDate = quiz.start.split('T')[0];
@@ -87,13 +90,13 @@ export default class QuizResultsButton extends Component {
 
     return (
       <TouchableOpacity style={styles.button} onPress={this.toggleDetails}>
-        <View style={styles.buttonHeading}>
+        <View style={[styles.buttonHeading, backgroundColorDark]}>
           <Text style={styles.buttonText}>{`Score: ${quizScore}`}</Text>
           {getIcon({
             iconLib: IconLibs.fontAwesome,
             name,
             size: fontSizes.xlarge,
-            color: Colors.colorScheme1.lightPrimary,
+            color: colorScheme.lightPrimary,
           })}
         </View>
         <Animated.View style={[
@@ -104,7 +107,7 @@ export default class QuizResultsButton extends Component {
               outputRange: [0, height]
             }),
           },
-          styles.detailsContainer]}
+          styles.detailsContainer, backgroundColorLight]}
         >
           <Text style={styles.detailsText}>{`Start time: ${startTime}`}</Text>
           <Text style={styles.detailsText}>{`Start date: ${startDate}`}</Text>
@@ -125,7 +128,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.colorScheme1.darkPrimary,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 5,
@@ -138,7 +140,6 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     justifyContent: 'center',
-    backgroundColor: Colors.colorScheme1.lightPrimary,
     paddingLeft: 20,
     paddingRight: 20,
   },
@@ -149,3 +150,13 @@ const styles = StyleSheet.create({
     color: Colors.colorScheme1.dark,
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  const { deckId, quizId } = ownProps;
+  return {
+    quiz: state[deckId].quizzes[quizId],
+    colorScheme: state[deckId].colorScheme,
+  };
+}
+
+export default connect(mapStateToProps)(QuizResultsButton);

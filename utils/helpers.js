@@ -2,6 +2,7 @@ import React from 'react';
 import { AsyncStorage } from 'react-native';
 import { Icon, Notifications, Permissions } from 'expo';
 import IconLibs from '../constants/IconLibs';
+import Colors from '../constants/Colors';
 import { FLASH_CARDS_KEY } from './api';
 
 const NOTIFICATION_KEY = 'FlashCards:notifications';
@@ -47,6 +48,20 @@ export function getIcon({
         />
       );
   }
+}
+
+export function assignColorsDecks(decks) {
+  const sortedDeckIds = Object.keys(decks).sort((id1, id2) => {
+    if (id1 > id2) return -1;
+    return 1;
+  });
+  return sortedDeckIds.reduce((acc, deckId, index) => {
+    acc[deckId] = {
+      ...decks[deckId],
+      colorScheme: Colors[`colorScheme${(index % 3) + 1}`],
+    };
+    return acc;
+  }, {});
 }
 
 export function getQuizStats(cards) {

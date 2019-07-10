@@ -30,17 +30,20 @@ export default function (props) {
     getNext,
     getPrevious,
     currentCard,
-    totalCards
+    totalCards,
+    colorScheme,
   } = props;
+  const backgroundColor = { backgroundColor: colorScheme.darkPrimary };
+  const textColor = { color: colorScheme.lightPrimary };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, backgroundColor]}>
       <TouchableOpacity
         style={{ justifyContent: 'center' }}
         onPress={getPrevious}
       >
         {getIcon(buttons[0])}
       </TouchableOpacity>
-      <Text style={styles.text}>
+      <Text style={[styles.text, textColor]}>
         {`${currentCard} of ${totalCards}`}
       </Text>
       <TouchableOpacity onPress={getNext}>
@@ -53,13 +56,11 @@ export default function (props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: Colors.colorScheme1.darkPrimary,
     justifyContent: 'space-between',
     padding: 15,
   },
   text: {
     fontSize: fontSizes.medium,
-    color: Colors.colorScheme1.lightPrimary,
     alignSelf: 'center',
   }
 });

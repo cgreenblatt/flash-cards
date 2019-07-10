@@ -6,28 +6,25 @@ import {
   DELETE_CARD,
   MARK_CARD,
   START_QUIZ,
-  COMPLETE_QUIZ
+  COMPLETE_QUIZ,
+  ASSIGN_COLOR_DECKS,
 } from '../actions';
+import Colors from '../constants/Colors';
+import { assignColorsDecks } from '../utils/helpers';
 
 function decks(state = {}, action) {
   switch (action.type) {
     case RECEIVE_DECKS:
-      return {
-        ...state,
-        ...action.decks,
-      };
+      return assignColorsDecks(action.decks);
     case ADD_DECK:
-      return {
-        ...state,
-        ...action.deck
-      };
+      return assignColorsDecks({ ...state, ...action.deck });
     case DELETE_DECK:
-      return Object.keys(state)
+      return assignColorsDecks(Object.keys(state)
         .filter(deckId => deckId !== action.deckId)
         .reduce((acc, deckId) => {
           acc[deckId] = state[deckId];
           return acc;
-        }, {});
+        }, {}));
     case ADD_CARD:
       return {
         ...state,
@@ -90,6 +87,14 @@ function decks(state = {}, action) {
           }
         }
       };
+    case ASSIGN_COLOR_DECKS:
+      return Object.keys(state).reduce((acc, deckId, index) => {
+        acc[deckId] = {
+          ...state[deckId],
+          colorScheme: Colors[`colorScheme${(index % 3) + 1}`],
+        };
+        return acc;
+      }, {});
     default:
       return state;
   }

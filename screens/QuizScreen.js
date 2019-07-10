@@ -21,23 +21,23 @@ const width = '100%';
 const flipAnimDur = 400;
 const { fontSizes } = Layout;
 
-function getQuestionIcon() {
+function getQuestionIcon(color) {
   return (
     <Icon.FontAwesome
       name="question"
       size={80}
-      color={Colors.colorScheme1.lightAccent}
+      color={color}
       style={{ paddingTop: 10, paddingBottom: 10 }}
     />
   );
 }
 
-function getAnswerIcon() {
+function getAnswerIcon(color) {
   return (
     <Icon.MaterialCommunityIcons
       name="lightbulb-on-outline"
       size={85}
-      color={Colors.colorScheme1.lightAccent}
+      color={color}
       style={{ padding: 10, fontWeight: 'bold' }}
     />
   );
@@ -74,27 +74,19 @@ class QuizScreen extends Component {
     this.changeQuestionAnimation = this.changeQuestionAnimation.bind(this);
     this.completeQuiz = this.completeQuiz.bind(this);
     this.toQuizResults = this.toQuizResults.bind(this);
-    const colorScheme = Colors.colorScheme1;
-    const colors = {
-      iconColor: colorScheme.darkAccent,
-      backgroundColor: colorScheme.lightPrimary,
-      textColor: colorScheme.dark,
-      borderColor: colorScheme.darkPrimary,
-    };
+
     this.buttons = [
       {
         iconLib: IconLibs.fontAwesome,
         name: 'check',
         text: 'Correct',
         onPress: () => { this.markCard('correct'); },
-        colors,
       },
       {
         iconLib: IconLibs.fontAwesome,
         name: 'times',
         text: 'Incorrect',
         onPress: () => { this.markCard('incorrect'); },
-        colors,
       }
     ];
 
@@ -103,7 +95,6 @@ class QuizScreen extends Component {
       name: 'lightbulb-on-outline',
       text: 'Answer',
       onPress: () => this.flipForwardAnimation(),
-      colors,
     }];
 
     this.question = [{
@@ -111,7 +102,6 @@ class QuizScreen extends Component {
       name: 'question',
       text: 'Question',
       onPress: () => this.flipReverseAnimation(0),
-      colors,
     }];
 
     this.flipAnim = new Animated.Value(0);
@@ -276,17 +266,29 @@ class QuizScreen extends Component {
     const { cardIndex } = this.state;
     const question = deck.cards[cardIndex];
 
+    const { colorScheme } = deck;
+    const buttonColors = {
+      iconColor: colorScheme.darkAccent,
+      backgroundColor: colorScheme.lightPrimary,
+      textColor: colorScheme.dark,
+      borderColor: colorScheme.darkPrimary,
+    };
+    const backgroundColor = { backgroundColor: colorScheme.darkPrimary };
+
     const { renderQuestion } = this.state;
     const buttons = renderQuestion
       ? this.bulb.concat(this.buttons)
       : this.question.concat(this.buttons);
 
+    const { lightAccent } = colorScheme;
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.animatedArea, getTransformStyle(this.flipAnim)]}>
+        <Animated.View
+          style={[styles.animatedArea, getTransformStyle(this.flipAnim), backgroundColor]}
+        >
           <View style={[styles.questionArea, renderQuestion ? {} : styles.reverse]}>
-            <DeckHeading title={deck.title} monochrome />
-            {renderQuestion ? getQuestionIcon() : getAnswerIcon()}
+            <DeckHeading title={deck.title} colorScheme={colorScheme} monochrome />
+            {renderQuestion ? getQuestionIcon(lightAccent) : getAnswerIcon(lightAccent)}
             <ScrollView style={styles.scrollview}>
               <Animated.Text style={[styles.questionText, { opacity: this.opacityAnim }]}>
                 {renderQuestion ? question.question : question.answer}
@@ -321,7 +323,7 @@ class QuizScreen extends Component {
                 name={button.name}
                 text={button.text}
                 onPress={button.onPress}
-                colors={button.colors}
+                colors={buttonColors}
               />
             ))}
           </View>
@@ -331,6 +333,7 @@ class QuizScreen extends Component {
           getPrevious={this.getPreviousQuestion}
           currentCard={cardIndex + 1}
           totalCards={deck.cards.length}
+          colorScheme={colorScheme}
         />
       </View>
 
@@ -347,8 +350,6 @@ const styles = StyleSheet.create({
   animatedArea: {
     flex: 1,
     justifyContent: 'space-between',
-    borderColor: Colors.cardBorder,
-    backgroundColor: Colors.colorScheme1.darkPrimary,
     margin: 20,
   },
   scrollview: {

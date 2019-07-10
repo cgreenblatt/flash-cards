@@ -5,20 +5,12 @@ import {
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import Colors from '../constants/Colors';
 import IconLibs from '../constants/IconLibs';
 import DeckHeading from '../components/DeckHeading';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import QuizResultsButton from '../components/QuizResultsButton';
 import { handleStartQuiz } from '../actions/index';
 import { timeToString, } from '../utils/helpers';
-
-const colors = {
-  iconColor: Colors.colorScheme1.darkAccent,
-  backgroundColor: Colors.colorScheme1.lightPrimary,
-  textColor: Colors.colorScheme1.dark,
-  borderColor: Colors.colorScheme1.darkPrimary,
-};
 
 class QuizResultsScreen extends Component {
   static navigationOptions = {
@@ -35,14 +27,12 @@ class QuizResultsScreen extends Component {
         iconLib: IconLibs.fontAwesome,
         name: 'arrow-left',
         text: 'To Deck',
-        colors,
         onPress: this.navigateToDeck,
       },
       {
         iconLib: IconLibs.fontAwesome,
         name: 'rotate-left',
         text: 'Restart Quiz',
-        colors,
         onPress: this.navigateToQuiz,
       },
     ];
@@ -61,19 +51,29 @@ class QuizResultsScreen extends Component {
   }
 
   render() {
-    const { deck } = this.props;
-    const { quizzes } = deck;
+    const { deck, deckId } = this.props;
+    const { colorScheme, quizzes } = deck;
     const sorted = Object.keys(quizzes).sort((q1, q2) => {
       if (q1 > q2) return -1;
       return 1;
     });
+
+    const buttonColors = {
+      iconColor: colorScheme.darkAccent,
+      backgroundColor: colorScheme.lightPrimary,
+      textColor: colorScheme.dark,
+      borderColor: colorScheme.darkPrimary,
+    };
+
+    const backgroundColor = { backgroundColor: colorScheme.darkPrimary };
+
     return (
       <View style={styles.container}>
-        <DeckHeading title={deck.title} subtitle="Quiz Results" />
+        <DeckHeading title={deck.title} subtitle="Quiz Results" colorScheme={colorScheme} />
         <ScrollView>
-          {sorted.map(quizId => <QuizResultsButton quiz={quizzes[quizId]} key={quizId} />)}
+          {sorted.map(quizId => <QuizResultsButton quizId={quizId} key={quizId} deckId={deckId} />)}
         </ScrollView>
-        <View style={styles.cardButtons}>
+        <View style={[styles.cardButtons, backgroundColor]}>
           {this.buttons.map(button => (
             <ButtonWithIcon
               key={button.name}
@@ -81,7 +81,7 @@ class QuizResultsScreen extends Component {
               name={button.name}
               text={button.text}
               onPress={button.onPress}
-              colors={button.colors}
+              colors={buttonColors}
             />
           ))}
         </View>
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: Colors.colorScheme1.darkPrimary,
   }
 });
 

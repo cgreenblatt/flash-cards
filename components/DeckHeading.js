@@ -1,23 +1,41 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
 const { fontSizes } = Layout;
 
 export default function DeckHeading(props) {
-  const { title, subtitle, monochrome } = props;
-  const colorMonochrome = monochrome
+  const {
+    title,
+    subtitle,
+    monochrome,
+    colorScheme
+  } = props;
+
+  const titleColors = monochrome
     ? {
-      backgroundColor: Colors.colorScheme1.lightPrimary,
-      color: Colors.colorScheme1.darkPrimary,
+      backgroundColor: colorScheme.lightPrimary,
+      color: colorScheme.darkPrimary,
     }
-    : {};
+    : {
+      backgroundColor: colorScheme.darkPrimary,
+      color: colorScheme.lightAccent,
+    };
+
+  const subtitleColors = monochrome
+    ? {
+      backgroundColor: colorScheme.darkPrimary,
+      color: colorScheme.lightPrimary,
+    }
+    : {
+      backgroundColor: colorScheme.lightPrimary,
+      color: colorScheme.darkAccent,
+    };
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, colorMonochrome]}>{title}</Text>
-      {subtitle && <Text style={[styles.subtitle, colorMonochrome]}>{subtitle}</Text>}
+      <Text style={[styles.title, titleColors]}>{title}</Text>
+      {subtitle && <Text style={[styles.subtitle, subtitleColors]}>{subtitle}</Text>}
     </View>
   );
 }
@@ -29,16 +47,12 @@ const styles = StyleSheet.create({
   },
   title: {
     padding: 10,
-    backgroundColor: Colors.colorScheme1.darkPrimary,
-    color: Colors.colorScheme1.lightAccent,
     fontSize: fontSizes.large,
     fontWeight: 'bold',
     textAlign: 'center'
   },
   subtitle: {
     padding: 5,
-    backgroundColor: Colors.colorScheme1.lightPrimary,
-    color: Colors.colorScheme1.darkAccent,
     fontSize: fontSizes.medium,
     fontWeight: 'bold',
     textAlign: 'center',

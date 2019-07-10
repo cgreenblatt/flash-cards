@@ -23,5 +23,4 @@ export default {
     lightAccent: '#FC600A',
     dark: '#110934'
   }
-
 };

@@ -12,15 +12,14 @@ import CardData from '../components/CardData';
 import ListButton from '../components/ListButton';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
-import { handleDeleteDeck, handleDeleteCard, handleStartQuiz } from '../actions/index';
+import {
+  handleDeleteDeck,
+  handleDeleteCard,
+  handleStartQuiz,
+} from '../actions/index';
 import { getIcon, timeToString } from '../utils/helpers';
 
-const colors = {
-  iconColor: Colors.colorScheme1.darkAccent,
-  backgroundColor: Colors.colorScheme1.lightPrimary,
-  textColor: Colors.colorScheme1.dark,
-  borderColor: Colors.colorScheme1.darkPrimary,
-};
+
 const { fontSizes } = Layout;
 
 class DeckScreen extends Component {
@@ -38,7 +37,11 @@ class DeckScreen extends Component {
   }
 
   deleteDeck() {
-    const { deleteDeck, navigation, deckId } = this.props;
+    const {
+      deleteDeck,
+      navigation,
+      deckId,
+    } = this.props;
     navigation.goBack();
     deleteDeck(deckId);
   }
@@ -71,6 +74,7 @@ class DeckScreen extends Component {
       <ListButton
         item={item}
         onPress={this.deleteCard}
+        colorScheme={item.colorScheme}
         childComponent={<CardData card={item} />}
         iconToRender={getIcon({
           iconLib: IconLibs.fontAwesome,
@@ -91,12 +95,22 @@ class DeckScreen extends Component {
       key: deckId.concat(index),
       ...card,
       id: index,
-    }
-    ));
+      colorScheme: deck.colorScheme,
+    }));
     const str = `${deck.cards.length} Card${deck.cards.length === 1 ? '' : 's'}`;
+    const { colorScheme } = deck;
+    const buttonColors = {
+      iconColor: colorScheme.darkAccent,
+      backgroundColor: colorScheme.lightPrimary,
+      textColor: colorScheme.dark,
+      borderColor: colorScheme.darkPrimary,
+    };
+    const buttonPanelColor = {
+      backgroundColor: colorScheme.darkPrimary,
+    };
     return (
       <View style={styles.container}>
-        <DeckHeading title={deck.title} subtitle={str} />
+        <DeckHeading title={deck.title} subtitle={str} colorScheme={colorScheme} />
         <View style={styles.cardListContainer}>
           <FlatList
             contentContainerStyle={styles.cardList}
@@ -104,10 +118,10 @@ class DeckScreen extends Component {
             renderItem={this.renderCard}
           />
         </View>
-        <View style={styles.buttonPanel}>
-          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="trash" text="Delete Deck" colors={colors} onPress={this.deleteDeck} />
-          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="plus" text="Add Card" colors={colors} onPress={this.navigateToAddCard} />
-          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="play" text="Start Quiz" colors={colors} onPress={this.navigateToQuiz} />
+        <View style={[styles.buttonPanel, buttonPanelColor]}>
+          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="trash" text="Delete Deck" colors={buttonColors} onPress={this.deleteDeck} />
+          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="plus" text="Add Card" colors={buttonColors} onPress={this.navigateToAddCard} />
+          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="play" text="Start Quiz" colors={buttonColors} onPress={this.navigateToQuiz} />
         </View>
       </View>
 
@@ -126,7 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: Colors.colorScheme1.darkPrimary,
   },
   cardListContainer: {
     flex: 3,
@@ -141,9 +154,9 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return {
-    deleteCard: (deckId, cardIndex) => { dispatch(handleDeleteCard(deckId, cardIndex)); },
-    deleteDeck: (deckId) => { dispatch(handleDeleteDeck(deckId)); },
-    startQuiz: (deckId, quizId) => { dispatch(handleStartQuiz(deckId, quizId)); }
+    deleteCard: (deckId, cardIndex) => dispatch(handleDeleteCard(deckId, cardIndex)),
+    deleteDeck: deckId => dispatch(handleDeleteDeck(deckId)),
+    startQuiz: (deckId, quizId) => { dispatch(handleStartQuiz(deckId, quizId)); },
   };
 }
 

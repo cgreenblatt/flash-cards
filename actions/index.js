@@ -21,6 +21,7 @@ export const DELETE_CARD = 'DELETE_CARD';
 export const MARK_CARD = 'MARK_CARD';
 export const START_QUIZ = 'START_QUIZ';
 export const COMPLETE_QUIZ = 'COMPLETE_QUIZ';
+export const ASSIGN_COLOR_DECKS = 'ASSIGN_COLOR_DECKS';
 
 export function handleReceiveDecks() {
   return dispatch => fetchDecks()
@@ -31,7 +32,7 @@ export function handleReceiveDecks() {
 export function handleDeleteDeck(deckId) {
   return (dispatch) => {
     checkNotification();
-    removeDeck(deckId)
+    return removeDeck(deckId)
       .then(() => dispatch(deleteDeck(deckId)))
       .catch(error => console.warn('An error occured deleting the deck.  Try again.', error));
   };
@@ -40,7 +41,7 @@ export function handleDeleteDeck(deckId) {
 export function handleAddDeck(deck) {
   return (dispatch) => {
     setLocalNotification();
-    submitDeck({ [deck.id]: deck })
+    return submitDeck({ [deck.id]: deck })
       .then(() => dispatch(addDeck({ [deck.id]: deck })))
       .catch(error => console.warn('An error occured adding the deck.  Try again.', error));
   };
@@ -142,5 +143,11 @@ function completeQuiz(deckId, quizId, stats) {
     deckId,
     quizId,
     stats
+  };
+}
+
+export function assignColorDecks() {
+  return {
+    type: ASSIGN_COLOR_DECKS,
   };
 }
