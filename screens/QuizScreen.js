@@ -153,9 +153,11 @@ class QuizScreen extends Component {
       navigation,
     } = this.props;
     if (!deck.quizzes[quizId].complete) {
-      completeQuiz(deckId, quizId, getQuizStats(deck.cards));
+      completeQuiz(deckId, quizId, getQuizStats(deck.cards))
+        .then(() => navigation.navigate('Results', { deckId }));
+    } else {
+      navigation.navigate('Results', { deckId });
     }
-    navigation.navigate('Results', { deckId });
   }
 
   completeQuiz() {
@@ -179,7 +181,7 @@ class QuizScreen extends Component {
     const { cardIndex } = this.state;
     // if quiz is already completed, don't change the mark
     if (deck.quizzes[quizId].complete) return;
-    // if card is already marked as update, change to no mark
+    // if card is already marked, change to no mark
     const cardMark = deck.cards[cardIndex].mark === update
       ? undefined
       : update;
@@ -385,9 +387,7 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return {
-    completeQuiz: (deckId, quizId, stats) => {
-      dispatch(handleCompleteQuiz(deckId, quizId, stats));
-    },
+    completeQuiz: (deckId, quizId, stats) => dispatch(handleCompleteQuiz(deckId, quizId, stats)),
     markCard: (deckId, cardIndex, update) => {
       dispatch(handleMarkCard(deckId, cardIndex, update));
     },

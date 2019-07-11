@@ -70,7 +70,7 @@ export function handleStartQuiz(deckId, quizId) {
 export function handleCompleteQuiz(deckId, quizId, stats) {
   return (dispatch) => {
     setLocalNotification();
-    submitQuizComplete(deckId, quizId, stats)
+    return submitQuizComplete(deckId, quizId, stats)
       .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
       .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
   };
