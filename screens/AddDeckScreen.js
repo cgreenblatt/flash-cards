@@ -22,10 +22,19 @@ class AddDeckScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.titleInput = undefined;
     this.state = {
       title: ''
     };
     this.submit = this.submit.bind(this);
+  }
+
+  componentDidMount() {
+    this.titleInput.focus();
+  }
+
+  componentDidUpdate() {
+    this.titleInput.focus();
   }
 
   submit() {
@@ -40,7 +49,7 @@ class AddDeckScreen extends Component {
     };
     this.setState({ title: '' });
     addDeck(deck);
-    navigation.navigate('Deck', { deckId: deck.id });
+    navigation.navigate('Deck', { deckId: deck.id, reRender: false });
   }
 
   render() {
@@ -61,6 +70,7 @@ class AddDeckScreen extends Component {
                 })
               }
               autoFocus
+              ref={(component) => { this.titleInput = component; }}
             />
           </KeyboardAvoidingView>
           <SubmitBtn onPress={this.submit} colorScheme={Colors.colorScheme1} />

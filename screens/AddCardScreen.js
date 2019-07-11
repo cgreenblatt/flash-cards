@@ -22,6 +22,7 @@ class AddCardScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.questionInput = undefined;
     this.state = {
       question: '',
       answer: '',
@@ -36,6 +37,7 @@ class AddCardScreen extends Component {
     if (question.length === 0 || answer.length === 0) return;
     addCard(deckId, this.state);
     this.setState({ question: '', answer: '' });
+    this.questionInput.focus();
   }
 
   render() {
@@ -55,6 +57,7 @@ class AddCardScreen extends Component {
             onChangeText={(text) => { this.setState({ question: text }); }}
             value={question}
             autoFocus
+            ref={(component) => { this.questionInput = component; }}
           />
           <TextInput
             style={[styles.textInput, borderColor]}
