@@ -81,7 +81,7 @@ class DeckScreen extends Component {
           iconLib: IconLibs.fontAwesome,
           name: 'trash',
           size: fontSizes.xlarge,
-          color: Colors.colorScheme1.darkPrimary
+          color: item.colorScheme.darkPrimary,
         })}
       />
     );
