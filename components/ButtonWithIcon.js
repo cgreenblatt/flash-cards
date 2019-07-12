@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { getIcon } from '../utils/helpers';
+import Layout from '../constants/Layout';
 
 export default function ButtonWithIcon(props) {
-  const size = 36;
+  const { fontSizes } = Layout;
+  const size = fontSizes.large;
   const {
     text,
     onPress,

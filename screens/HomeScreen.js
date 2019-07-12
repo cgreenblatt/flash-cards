@@ -75,7 +75,7 @@ class HomeScreen extends React.Component {
                 iconToRender={getIcon({
                   iconLib: IconLibs.fontAwesome,
                   name: 'chevron-circle-right',
-                  size: fontSizes.xlarge,
+                  size: fontSizes.large,
                   color: decks[deckId].colorScheme.darkPrimary,
                 })}
               />

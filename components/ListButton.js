@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 14,
   },
 });

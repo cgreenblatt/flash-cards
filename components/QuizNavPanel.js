@@ -14,13 +14,13 @@ const buttons = [
   {
     iconLib: IconLibs.fontAwesome,
     name: 'chevron-circle-left',
-    size: fontSizes.xlarge,
+    size: fontSizes.large,
     color: Colors.colorScheme1.lightPrimary
   },
   {
     iconLib: IconLibs.fontAwesome,
     name: 'chevron-circle-right',
-    size: fontSizes.xlarge,
+    size: fontSizes.large,
     color: Colors.colorScheme1.lightPrimary
   }
 ];

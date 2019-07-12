@@ -80,7 +80,7 @@ class DeckScreen extends Component {
         iconToRender={getIcon({
           iconLib: IconLibs.fontAwesome,
           name: 'trash',
-          size: fontSizes.xlarge,
+          size: fontSizes.large,
           color: item.colorScheme.darkPrimary,
         })}
       />

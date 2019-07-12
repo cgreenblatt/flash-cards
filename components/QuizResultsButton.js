@@ -95,7 +95,7 @@ class QuizResultsButton extends Component {
           {getIcon({
             iconLib: IconLibs.fontAwesome,
             name,
-            size: fontSizes.xlarge,
+            size: fontSizes.large,
             color: colorScheme.lightPrimary,
           })}
         </View>
@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   buttonText: {
     color: '#FFF',
