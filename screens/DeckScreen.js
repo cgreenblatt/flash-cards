@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   FlatList,
   StyleSheet,
+  Text,
   View
 } from 'react-native';
 import IconLibs from '../constants/IconLibs';
@@ -111,13 +112,22 @@ class DeckScreen extends Component {
     return (
       <View style={styles.container}>
         <DeckHeading title={deck.title} subtitle={str} colorScheme={colorScheme} />
-        <View style={styles.cardListContainer}>
-          <FlatList
-            contentContainerStyle={styles.cardList}
-            data={cards}
-            renderItem={this.renderCard}
-          />
-        </View>
+        {deck.cards.length === 0
+          ? (
+            <View>
+              <Text style={styles.noCardsText}>Use the button below</Text>
+              <Text style={styles.noCardsText}>to add cards.</Text>
+            </View>
+          ) : (
+            <View style={styles.cardListContainer}>
+              <FlatList
+                contentContainerStyle={styles.cardList}
+                data={cards}
+                renderItem={this.renderCard}
+              />
+            </View>
+          )
+        }
         <View style={[styles.buttonPanel, buttonPanelColor]}>
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="trash" text="Delete Deck" colors={buttonColors} onPress={this.deleteDeck} />
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="plus" text="Add Card" colors={buttonColors} onPress={this.navigateToAddCard} />
@@ -133,6 +143,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch',
+    justifyContent: 'space-between',
+  },
+  noCardsText: {
+    paddingBottom: 20,
+    fontSize: fontSizes.medium,
+    textAlign: 'center',
+    color: Colors.colorScheme1.darkPrimary,
   },
   buttonPanel: {
     flexDirection: 'row',
