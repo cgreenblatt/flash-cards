@@ -62,7 +62,7 @@ class QuizResultsScreen extends Component {
       iconColor: colorScheme.darkAccent,
       backgroundColor: colorScheme.lightPrimary,
       textColor: colorScheme.dark,
-      borderColor: colorScheme.darkPrimary,
+      borderColor: colorScheme.darkAccent,
     };
 
     const backgroundColor = { backgroundColor: colorScheme.darkPrimary };
