@@ -59,3 +59,14 @@ export function submitQuizComplete(deckId, quizId, stats) {
       return AsyncStorage.setItem(FLASH_CARDS_KEY, JSON.stringify(decks));
     });
 }
+
+export function removeQuizzes(deckId) {
+  console.log("in remove quizzes damn it");
+  return AsyncStorage.getItem(FLASH_CARDS_KEY)
+    .then((results) => {
+      const decks = JSON.parse(results);
+      delete decks[deckId].quizzes;
+      decks[deckId].quizzes = {};
+      return AsyncStorage.setItem(FLASH_CARDS_KEY, JSON.stringify(decks));
+    });
+}

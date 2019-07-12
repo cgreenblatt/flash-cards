@@ -6,7 +6,8 @@ import {
   submitCard,
   removeCard,
   submitQuizStart,
-  submitQuizComplete
+  submitQuizComplete,
+  removeQuizzes,
 } from '../utils/api';
 import {
   checkNotification,
@@ -21,6 +22,7 @@ export const DELETE_CARD = 'DELETE_CARD';
 export const MARK_CARD = 'MARK_CARD';
 export const START_QUIZ = 'START_QUIZ';
 export const COMPLETE_QUIZ = 'COMPLETE_QUIZ';
+export const DELETE_QUIZZES = 'DELETE_QUIZZES';
 export const ASSIGN_COLOR_DECKS = 'ASSIGN_COLOR_DECKS';
 
 export function handleReceiveDecks() {
@@ -74,6 +76,12 @@ export function handleCompleteQuiz(deckId, quizId, stats) {
       .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
       .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
   };
+}
+
+export function handleDeleteQuizzes(deckId) {
+  return dispatch => removeQuizzes(deckId)
+    .then(() => dispatch(deleteQuizzes(deckId)))
+    .catch(error => console.warn('An error occured deleting the quizzes.  Try again.', error));
 }
 
 export function handleDeleteCard(deckId, cardIndex) {
@@ -143,6 +151,13 @@ function completeQuiz(deckId, quizId, stats) {
     deckId,
     quizId,
     stats
+  };
+}
+
+function deleteQuizzes(deckId) {
+  return {
+    type: DELETE_QUIZZES,
+    deckId,
   };
 }
 

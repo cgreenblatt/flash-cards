@@ -7,6 +7,7 @@ import {
   MARK_CARD,
   START_QUIZ,
   COMPLETE_QUIZ,
+  DELETE_QUIZZES,
   ASSIGN_COLOR_DECKS,
 } from '../actions';
 import Colors from '../constants/Colors';
@@ -85,6 +86,14 @@ function decks(state = {}, action) {
               ...action.stats
             }
           }
+        }
+      };
+    case DELETE_QUIZZES:
+      return {
+        ...state,
+        [action.deckId]: {
+          ...state[action.deckId],
+          quizzes: {},
         }
       };
     case ASSIGN_COLOR_DECKS:

@@ -9,7 +9,7 @@ import IconLibs from '../constants/IconLibs';
 import DeckHeading from '../components/DeckHeading';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import QuizResultsButton from '../components/QuizResultsButton';
-import { handleStartQuiz } from '../actions/index';
+import { handleStartQuiz, handleDeleteQuizzes } from '../actions/index';
 import { timeToString, } from '../utils/helpers';
 
 class QuizResultsScreen extends Component {
@@ -21,6 +21,7 @@ class QuizResultsScreen extends Component {
     super(props);
     this.navigateToDeck = this.navigateToDeck.bind(this);
     this.navigateToQuiz = this.navigateToQuiz.bind(this);
+    this.deleteQuizzes = this.deleteQuizzes.bind(this);
 
     this.buttons = [
       {
@@ -35,6 +36,12 @@ class QuizResultsScreen extends Component {
         text: 'Restart Quiz',
         onPress: this.navigateToQuiz,
       },
+      {
+        iconLib: IconLibs.fontAwesome,
+        name: 'trash',
+        text: 'Delete All',
+        onPress: this.deleteQuizzes,
+      }
     ];
   }
 
@@ -48,6 +55,11 @@ class QuizResultsScreen extends Component {
     const quizId = timeToString();
     startQuiz(deckId, quizId);
     navigation.replace('Quiz', { deckId, quizId });
+  }
+
+  deleteQuizzes() {
+    const { deckId, deleteQuizzes } = this.props;
+    deleteQuizzes(deckId);
   }
 
   render() {
@@ -106,7 +118,8 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return {
-    startQuiz: (deckId, quizId) => { dispatch(handleStartQuiz(deckId, quizId)); }
+    startQuiz: (deckId, quizId) => { dispatch(handleStartQuiz(deckId, quizId)); },
+    deleteQuizzes: deckId => dispatch(handleDeleteQuizzes(deckId))
   };
 }
 
