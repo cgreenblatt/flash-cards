@@ -141,7 +141,14 @@ class DeckScreen extends Component {
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="trash" text="Delete Deck" colors={buttonColors} onPress={this.deleteDeck} />
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="arrow-right" text="To Results" colors={buttonColors} onPress={this.navigateToQuizResults} />
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="plus" text="Add Card" colors={buttonColors} onPress={this.navigateToAddCard} />
-          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="play" text="Start Quiz" colors={buttonColors} onPress={this.navigateToQuiz} />
+          <ButtonWithIcon
+            iconLib={IconLibs.fontAwesome}
+            name="play"
+            text="Start Quiz"
+            colors={buttonColors}
+            onPress={this.navigateToQuiz}
+            disabled={deck.cards.length === 0 ? true : undefined}
+          />
         </View>
       </View>
 

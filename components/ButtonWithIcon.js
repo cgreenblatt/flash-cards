@@ -16,25 +16,30 @@ export default function ButtonWithIcon(props) {
     iconLib,
     name,
     colors,
+    disabled,
   } = props;
-  const {
-    iconColor,
-    backgroundColor,
-    textColor,
-    borderColor,
-  } = colors;
   return (
     <TouchableOpacity
-      style={[styles.container, { borderColor, backgroundColor }]}
+      style={[styles.container,
+        {
+          backgroundColor: disabled ? '#E6E6E6' : colors.backgroundColor,
+          borderColor: disabled ? '#808080' : colors.borderColor,
+        }
+      ]}
       onPress={onPress}
+      disabled={disabled}
     >
       {getIcon({
         iconLib,
         size,
         name,
-        color: iconColor,
+        color: disabled ? '#808080' : colors.iconColor,
       })}
-      <Text style={[styles.buttonText, { color: textColor }]}>{text}</Text>
+      <Text style={[styles.buttonText,
+        { color: disabled ? '#808080' : colors.textColor }]}
+      >
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 }

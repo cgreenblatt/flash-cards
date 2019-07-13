@@ -2,15 +2,19 @@ import React, { Component } from 'react';
 import {
   ScrollView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
 import IconLibs from '../constants/IconLibs';
+import Layout from '../constants/Layout';
 import DeckHeading from '../components/DeckHeading';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import QuizResultsButton from '../components/QuizResultsButton';
 import { handleStartQuiz, handleDeleteQuizzes } from '../actions/index';
 import { timeToString, } from '../utils/helpers';
+
+const { fontSizes } = Layout;
 
 class QuizResultsScreen extends Component {
   static navigationOptions = {
@@ -78,13 +82,24 @@ class QuizResultsScreen extends Component {
     };
 
     const backgroundColor = { backgroundColor: colorScheme.darkPrimary };
+    const textColor = { color: colorScheme.darkPrimary };
 
     return (
       <View style={styles.container}>
         <DeckHeading title={deck.title} subtitle="Quiz Results" colorScheme={colorScheme} />
-        <ScrollView>
-          {sorted.map(quizId => <QuizResultsButton quizId={quizId} key={quizId} deckId={deckId} />)}
-        </ScrollView>
+        {sorted.length > 0
+          ? (
+            <ScrollView>
+              {sorted.map(
+                quizId => <QuizResultsButton quizId={quizId} key={quizId} deckId={deckId} />
+              )}
+            </ScrollView>
+          ) : (
+            <View>
+              <Text style={[styles.text, textColor]}>There are no quiz scores.</Text>
+            </View>
+          )
+        }
         <View style={[styles.cardButtons, backgroundColor]}>
           {this.buttons.map(button => (
             <ButtonWithIcon
@@ -94,6 +109,7 @@ class QuizResultsScreen extends Component {
               text={button.text}
               onPress={button.onPress}
               colors={buttonColors}
+              disabled={((button.name === 'rotate-left' || button.name === 'trash') && sorted.length === 0) ? true : undefined}
             />
           ))}
         </View>
@@ -105,7 +121,12 @@ class QuizResultsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  text: {
+    textAlign: 'center',
+    alignContent: 'stretch',
+    fontSize: fontSizes.medium,
   },
   cardButtons:
   {
