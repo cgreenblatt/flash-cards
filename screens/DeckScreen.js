@@ -34,6 +34,7 @@ class DeckScreen extends Component {
     this.deleteCard = this.deleteCard.bind(this);
     this.navigateToAddCard = this.navigateToAddCard.bind(this);
     this.navigateToQuiz = this.navigateToQuiz.bind(this);
+    this.navigateToQuizResults = this.navigateToQuizResults.bind(this);
     this.renderCard = this.renderCard.bind(this);
   }
 
@@ -63,6 +64,11 @@ class DeckScreen extends Component {
     const quizId = timeToString();
     startQuiz(deckId, quizId);
     navigation.navigate('Quiz', { deckId, quizId });
+  }
+
+  navigateToQuizResults() {
+    const { navigation, deckId } = this.props;
+    navigation.navigate('Results', { deckId });
   }
 
   deleteCard(cardIndex) {
@@ -109,14 +115,17 @@ class DeckScreen extends Component {
     const buttonPanelColor = {
       backgroundColor: colorScheme.darkPrimary,
     };
+    const textColor = {
+      color: colorScheme.darkPrimary
+    };
     return (
       <View style={styles.container}>
         <DeckHeading title={deck.title} subtitle={str} colorScheme={colorScheme} />
         {deck.cards.length === 0
           ? (
             <View>
-              <Text style={styles.noCardsText}>Use the button below</Text>
-              <Text style={styles.noCardsText}>to add cards.</Text>
+              <Text style={[styles.noCardsText, textColor]}>Use the button below</Text>
+              <Text style={[styles.noCardsText, textColor]}>to add cards.</Text>
             </View>
           ) : (
             <View style={styles.cardListContainer}>
@@ -130,6 +139,7 @@ class DeckScreen extends Component {
         }
         <View style={[styles.buttonPanel, buttonPanelColor]}>
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="trash" text="Delete Deck" colors={buttonColors} onPress={this.deleteDeck} />
+          <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="arrow-right" text="To Results" colors={buttonColors} onPress={this.navigateToQuizResults} />
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="plus" text="Add Card" colors={buttonColors} onPress={this.navigateToAddCard} />
           <ButtonWithIcon iconLib={IconLibs.fontAwesome} name="play" text="Start Quiz" colors={buttonColors} onPress={this.navigateToQuiz} />
         </View>
@@ -149,7 +159,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     fontSize: fontSizes.medium,
     textAlign: 'center',
-    color: Colors.colorScheme1.darkPrimary,
   },
   buttonPanel: {
     flexDirection: 'row',
