@@ -43,13 +43,13 @@ class AddDeckScreen extends Component {
     if (title.length === 0) return;
     const deck = {
       id: timeToString(),
-      title,
+      title: title.trim(),
       cards: [],
       quizzes: {}
     };
     this.setState({ title: '' });
     addDeck(deck);
-    navigation.navigate('Deck', { deckId: deck.id, reRender: false });
+    navigation.navigate('Deck', { deckId: deck.id });
   }
 
   render() {

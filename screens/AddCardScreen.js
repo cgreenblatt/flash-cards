@@ -35,7 +35,11 @@ class AddCardScreen extends Component {
     const { addCard, deckId } = this.props;
 
     if (question.length === 0 || answer.length === 0) return;
-    addCard(deckId, this.state);
+    addCard(deckId,
+      {
+        question: question.trim(),
+        answer: answer.trim()
+      });
     this.setState({ question: '', answer: '' });
     this.questionInput.focus();
   }
