@@ -152,12 +152,12 @@ function getPermissionStatus() {
 /* from Tyler McGinnis */
 // called whenever a quiz is taken or whenever a deck is added
 export function setLocalNotification() {
-      getPermissionStatus()
-        .then(permission => {
-          if (permission) {
-            scheduleLocalNotification();
-            return;
-          }
-          askForPermission();
-        });
+  getPermissionStatus()
+    .then((permission) => {
+      if (permission) {
+        scheduleLocalNotification();
+        return;
+      }
+      askForPermission();
+    });
 }
