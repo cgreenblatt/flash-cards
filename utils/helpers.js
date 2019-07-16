@@ -132,22 +132,32 @@ export function checkNotification() {
     });
 }
 
+function askForPermission() {
+  Permissions.askAsync(Permissions.NOTIFICATIONS)
+    .then((({ status }) => {
+      if (status === 'granted') {
+        scheduleLocalNotification();
+        AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+      }
+    }));
+}
+
+// returns true if permission has already been granted
+function getPermissionStatus() {
+  return AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then(JSON.parse)
+    .then(data => data);
+}
+
 /* from Tyler McGinnis */
 // called whenever a quiz is taken or whenever a deck is added
 export function setLocalNotification() {
-  AsyncStorage.getItem(NOTIFICATION_KEY)
-    .then(JSON.parse)
-    .then((data) => {
-      if (data) {
-        scheduleLocalNotification();
-        return;
-      }
-      Permissions.askAsync(Permissions.NOTIFICATIONS)
-        .then((({ status }) => {
-          if (status === 'granted') {
+      getPermissionStatus()
+        .then(permission => {
+          if (permission) {
             scheduleLocalNotification();
-            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+            return;
           }
-        }));
-    });
+          askForPermission();
+        });
 }
