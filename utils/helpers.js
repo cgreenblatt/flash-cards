@@ -1,12 +1,13 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
-import { Icon, Notifications, Permissions } from 'expo';
+import { Icon, Notifications } from 'expo';
 import IconLibs from '../constants/IconLibs';
 import Colors from '../constants/Colors';
-import { FLASH_CARDS_KEY } from './api';
-
-const NOTIFICATION_KEY = 'FlashCards:notifications';
-const hour = 9;
+import {
+  getLastQuizComplete,
+  getPermission,
+  savePermission,
+  askForPermission
+} from './api';
 
 export function getIcon({
   iconLib,
@@ -82,13 +83,6 @@ export function timeToString(time = Date.now()) {
   return todayUTC.toISOString().split('.000Z')[0];
 }
 
-
-/* from Tyler McGinnis */
-export function clearLocalNotifcation() {
-  return AsyncStorage.removeItem(NOTIFICATION_KEY)
-    .then(Notifications.cancelAllScheduledNotificationsAsync);
-}
-
 /* from Typer McGinnis */
 function createNotification() {
   return {
@@ -106,58 +100,53 @@ function createNotification() {
   };
 }
 
-function scheduleLocalNotification() {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(hour);
-  tomorrow.setMinutes(0);
-  Notifications.cancelAllScheduledNotificationsAsync();
-  Notifications.scheduleLocalNotificationAsync(
-    createNotification(),
-    {
-      time: tomorrow,
-      repeat: 'day',
-    }
-  );
-}
-
-// called when a deck is deleted - cancels notifications if all decks
-// are deleted
-export function checkNotification() {
-  AsyncStorage.getItem(FLASH_CARDS_KEY)
-    .then((decks) => {
-      if (Object.keys(decks).length === 0) {
-        Notifications.cancelAllScheduledNotificationsAsync();
-      }
+function quizTakenToday() {
+  const today = timeToString().split('T')[0];
+  return getLastQuizComplete()
+    .then((last) => {
+      if (!last) return false;
+      const lastDate = last.split('T')[0];
+      return lastDate === today;
     });
 }
 
-function askForPermission() {
-  Permissions.askAsync(Permissions.NOTIFICATIONS)
-    .then((({ status }) => {
-      if (status === 'granted') {
-        scheduleLocalNotification();
-        AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
-      }
-    }));
+export function notify() {
+  // schedule tomorrow's notification
+  setTimeout(notify, getMillisecondsTillNextNotify());
+  quizTakenToday()
+    .then((takenToday) => {
+      // if quiz taken today, no need to notify user
+      if (takenToday) return;
+      // otherwise notify the user
+      Notifications.presentLocalNotificationAsync(createNotification());
+    });
 }
 
-// returns true if permission has already been granted
-function getPermissionStatus() {
-  return AsyncStorage.getItem(NOTIFICATION_KEY)
-    .then(JSON.parse)
-    .then(data => data);
+function getMillisecondsTillNextNotify() {
+  const hours = 12;
+  const now = Date.now();
+  const today = new Date(now);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(hours);
+  tomorrow.setMinutes(0);
+  tomorrow.setSeconds(0);
+  const next = tomorrow - today;
+  return next;
 }
 
-/* from Tyler McGinnis */
-// called whenever a quiz is taken or whenever a deck is added
+function startNotificationTimer() {
+  setTimeout(notify, getMillisecondsTillNextNotify());
+}
+
 export function setLocalNotification() {
-  getPermissionStatus()
+  getPermission()
     .then((permission) => {
-      if (permission) {
-        scheduleLocalNotification();
-        return;
-      }
-      askForPermission();
+      // if permision granted previously, nothing to do
+      if (permission) return;
+      askForPermission()
+        .then((granted) => {
+          if (granted) savePermission().then(() => startNotificationTimer());
+        });
     });
 }

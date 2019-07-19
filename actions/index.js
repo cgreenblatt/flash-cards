@@ -9,10 +9,6 @@ import {
   submitQuizComplete,
   removeQuizzes,
 } from '../utils/api';
-import {
-  checkNotification,
-  setLocalNotification,
-} from '../utils/helpers';
 
 export const RECEIVE_DECKS = 'RECEIVE_DECKS';
 export const ADD_DECK = 'ADD_DECK';
@@ -27,26 +23,22 @@ export const ASSIGN_COLOR_DECKS = 'ASSIGN_COLOR_DECKS';
 
 export function handleReceiveDecks() {
   return dispatch => fetchDecks()
-    .then(results => dispatch(receiveDecks(results)))
+    .then((results) => {
+      if (results) dispatch(receiveDecks(results));
+    })
     .catch(error => console.warn('An error occurred fetching the deck data.  Try again.', error));
 }
 
 export function handleDeleteDeck(deckId) {
-  return (dispatch) => {
-    checkNotification();
-    return removeDeck(deckId)
-      .then(() => dispatch(deleteDeck(deckId)))
-      .catch(error => console.warn('An error occured deleting the deck.  Try again.', error));
-  };
+  return dispatch => removeDeck(deckId)
+    .then(() => dispatch(deleteDeck(deckId)))
+    .catch(error => console.warn('An error occured deleting the deck.  Try again.', error));
 }
 
 export function handleAddDeck(deck) {
-  return (dispatch) => {
-    setLocalNotification();
-    return submitDeck({ [deck.id]: deck })
-      .then(() => dispatch(addDeck({ [deck.id]: deck })))
-      .catch(error => console.warn('An error occured adding the deck.  Try again.', error));
-  };
+  return dispatch => submitDeck({ [deck.id]: deck })
+    .then(() => dispatch(addDeck({ [deck.id]: deck })))
+    .catch(error => console.warn('An error occured adding the deck.  Try again.', error));
 }
 
 export function handleAddCard(deckId, card) {
@@ -70,12 +62,9 @@ export function handleStartQuiz(deckId, quizId) {
 }
 
 export function handleCompleteQuiz(deckId, quizId, stats) {
-  return (dispatch) => {
-    setLocalNotification();
-    return submitQuizComplete(deckId, quizId, stats)
-      .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
-      .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
-  };
+  return dispatch => submitQuizComplete(deckId, quizId, stats)
+    .then(() => dispatch(completeQuiz(deckId, quizId, stats)))
+    .catch(error => console.warn('An error occured completing the quiz.  Try again.', error));
 }
 
 export function handleDeleteQuizzes(deckId) {

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { handleReceiveDecks } from '../actions/index';
-import { getIcon } from '../utils/helpers';
+import { getIcon, setLocalNotification } from '../utils/helpers';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import IconLibs from '../constants/IconLibs';
@@ -31,7 +31,10 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     const { receiveDecks } = this.props;
     receiveDecks()
-      .then(() => this.setState({ decksReady: true }));
+      .then(() => {
+        this.setState({ decksReady: true });
+        setLocalNotification();
+      });
   }
 
   onPress(deckId) {
@@ -40,7 +43,7 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const { decksReady } = this.state;
+    const { decksReady, permission } = this.state;
     if (!decksReady) return null;
     const { decks } = this.props;
     const deckIds = Object.keys(decks);
