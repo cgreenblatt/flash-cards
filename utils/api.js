@@ -1,4 +1,4 @@
-import { AsyncStorage, Platform } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { Permissions } from 'expo';
 
 export const FLASH_CARDS_KEY = 'FlashCards:decks';

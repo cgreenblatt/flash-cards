@@ -43,7 +43,7 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const { decksReady, permission } = this.state;
+    const { decksReady } = this.state;
     if (!decksReady) return null;
     const { decks } = this.props;
     const deckIds = Object.keys(decks);
